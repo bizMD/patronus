@@ -15,7 +15,14 @@ setInterval ->
 module.exports = (rq, rs, nx) ->
 	rs.writeHead 200, {"Content-Type": "text/plain"}
 	soap.createClient (resolve 'wsdl', 'HPD_IncidentInterface_WS.xml'), (err, client) ->
-		throw error if error?
+
+		console.log "##################"
+		console.log "ERROR: #{err}"
+		console.log "##################"
+		console.log "CLIENT:"
+		console.log client.describe()
+
+		throw err if err?
 
 		client.addSoapHeader
 			userName: 'dummyusername'
@@ -33,4 +40,5 @@ module.exports = (rq, rs, nx) ->
 			client.HelpDesk_QueryList_Service_WithOtherFields args, (err, result) ->
 				throw err if err?
 				rs.write JSON.stringify result
-				rs.end()
+		
+		rs.end()
